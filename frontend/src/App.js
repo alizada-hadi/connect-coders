@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./layouts/Header";
 import Register from "./pages/Register";
@@ -14,22 +14,24 @@ import Profile from "./pages/Profile";
 function App() {
   return (
     <div className="">
-      <Header />
-      <Routes>
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
-        <Route path="/signup" element={<Register />} />
-        <Route path="/signin" element={<Login />} />
-        <Route path="/activate/:uid/:token" element={<Activate />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/password/reset/confirm/:uid/:token"
-          element={<ResetPasswordConfirm />}
-        />
-      </Routes>
-      <ToastContainer />
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/signin" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/activate/:uid/:token" element={<Activate />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/password/reset/confirm/:uid/:token"
+            element={<ResetPasswordConfirm />}
+          />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/" exact element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+        <ToastContainer />
+      </Router>
     </div>
   );
 }

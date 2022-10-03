@@ -30,12 +30,6 @@ const Header = () => {
     navigate("/signin");
   };
 
-  useEffect(() => {
-    if (!access) {
-      navigate("/signin");
-    }
-  }, [access, navigate]);
-
   return (
     <div className="w-full h-12">
       <div className="flex items-start justify-between md:mx-12 lg:mx-24 py-2">

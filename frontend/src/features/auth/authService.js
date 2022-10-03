@@ -24,12 +24,12 @@ const get_user = async (data) => {
     },
   };
   const response = await axios.get("/accounts/user/", config);
-
+  if (response.data) {
+    localStorage.setItem("userInfo", JSON.stringify(response.data));
+  }
   return response.data;
 };
-
 // activate user
-
 const activate = async (data) => {
   const response = await axios.post("/accounts/auth/users/activation/", data);
   return response.data;
