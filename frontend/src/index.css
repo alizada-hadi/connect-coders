@@ -7,3 +7,9 @@
 .btn {
   @apply border-2 border-slate-500 rounded-lg p-2 text-slate-500 hover:bg-slate-600 hover:text-white transition ease-out duration-500;
 }
+
+@layer {
+  li {
+    @apply pr-6;
+  }
+}
