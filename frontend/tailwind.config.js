@@ -11,6 +11,7 @@ module.exports = {
     extend: {
       fontFamily: {
         Nunito: ["Nunito"],
+        Roboto: ["Roboto"],
       },
     },
   },
