@@ -1,10 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Outlet, Navigate } from "react-router-dom";
 
 const ProtectedRoutes = () => {
-  const access = JSON.parse(localStorage.getItem("tokens"));
+  const { access } = useSelector((state) => state.auth);
 
-  return access?.access ? <Outlet /> : <Navigate to={"/signin"} />;
+  return access ? <Outlet /> : <Navigate to={"/signin"} />;
 };
 
 export default ProtectedRoutes;

@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRight, BsMoonStars, BsSun } from "react-icons/bs";
-import { MdLogin } from "react-icons/md";
-import { BiUserPlus } from "react-icons/bi";
+import { VscSignOut } from "react-icons/vsc";
+import { FiSettings } from "react-icons/fi";
+import { AiOutlineUser, AiOutlineDashboard } from "react-icons/ai";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineHome } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
 import { changeTheme } from "../features/ui/UISlice";
 
+import UserAvatar from "../assets/users/avatar-1.jpg";
+
 const Header = () => {
   const [nav, setNav] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const { access } = useSelector((state) => state.auth);
+  const [dropdown, setDropdown] = useState(false);
+  const { access, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleChangeTheme = () => {
     setDarkMode(!darkMode);
@@ -21,6 +25,14 @@ const Header = () => {
     setNav(!nav);
   };
   const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    dispatch(reset());
+    navigate("/signin");
+  };
+  const dropdownHandler = () => {
+    setDropdown(!dropdown);
+  };
   return (
     <div className="w-full h-[50px] fixed bg-zinc-100 dark:bg-gray-800 drop-shadow-sm">
       <nav className="flex items-center justify-between mx-12 md:mx-20 lg:mx-32">
@@ -33,12 +45,16 @@ const Header = () => {
             </div>
             <div className=" ">
               <ul className="ml-12 hidden dark:text-slate-100 text-lg md:flex">
-                <li>
-                  <Link to={"/"} className="flex items-center">
-                    <AiOutlineHome className="mr-2" />
-                    Home
-                  </Link>
-                </li>
+                {access ? (
+                  <li>
+                    <Link to={"/"} className="flex items-center">
+                      <AiOutlineHome className="mr-2" />
+                      Home
+                    </Link>
+                  </li>
+                ) : (
+                  ""
+                )}
               </ul>
             </div>
           </div>
@@ -46,16 +62,81 @@ const Header = () => {
         <div className="hidden md:flex flex-items">
           <button
             onClick={() => handleChangeTheme()}
-            className="mr-8 border rounded-md transition ease-out duration-300 px-3 mt-1"
+            className=" border rounded-md transition ease-out duration-300 mr-8 px-3 mt-2"
           >
             {darkMode ? <BsMoonStars /> : <BsSun className="text-white" />}
           </button>
-          <Link
-            to={"/signup"}
-            className="flex items-center bg-cyan-600 px-4 py-2 mt-1 font-medium rounded-md text-slate-100 hover:bg-transparent hover:border-2 hover:text-slate-800 border-gray-800 ease-out duration-100"
-          >
-            Get Started <BsArrowRight className="ml-2" />
-          </Link>
+          {access ? (
+            <>
+              <div className="md:order-2  mr-10 mt-2 ">
+                <button
+                  onClick={dropdownHandler}
+                  type="button"
+                  className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  id="user-menu-button"
+                  aria-expanded="false"
+                  data-dropdown-toggle="user-dropdown"
+                  data-dropdown-placement="bottom"
+                >
+                  <img
+                    className="w-9 h-9 rounded-full"
+                    src={UserAvatar}
+                    alt="user photo"
+                  />
+                </button>
+                <div
+                  className={
+                    dropdown
+                      ? `flex flex-col z-10 absolute w-48 bg-white mt-2 rounded-md shadow-sm dark:bg-slate-700 dark:text-slate-200 dark:hover:text-slate-800`
+                      : `hidden  flex-col z-10 absolute w-48 bg-white mt-2 rounded-md shadow-sm dark:bg-slate-700 dark:text-slate-200 dark:hover:text-slate-800`
+                  }
+                >
+                  <span className="mt-1 cursor-pointer hover:bg-gray-200 px-4 py-1 rounded-sm">
+                    <Link
+                      to={"/profile"}
+                      onClick={dropdownHandler}
+                      className="flex items-center"
+                    >
+                      <AiOutlineUser className="text-xl mr-3" />
+                      <span className="text-lg font-medium">
+                        {user.username}
+                      </span>
+                    </Link>
+                  </span>
+                  <span className="mt-1 cursor-pointer hover:bg-gray-200 px-4 py-1 rounded-sm">
+                    <Link to={"/"} className="flex items-center">
+                      <AiOutlineDashboard className="text-xl mr-3" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </span>
+                  <span className="mt-1 cursor-pointer hover:bg-gray-200 px-4 py-1 rounded-sm">
+                    <Link to={"/"} className="flex items-center">
+                      <FiSettings className="text-xl mr-3" />
+                      <span>Settings</span>
+                    </Link>
+                  </span>
+                  <span className="my-1 cursor-pointer hover:bg-gray-200 px-4 py-1 rounded-sm border-t">
+                    <button
+                      onClick={logoutHandler}
+                      className="flex items-center"
+                    >
+                      <VscSignOut className="text-xl mr-3" />
+                      <span>Sign Out</span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                to={"/signup"}
+                className="flex items-center bg-cyan-600 px-4 py-2 mt-1 font-medium rounded-md text-slate-100 hover:bg-transparent hover:border-2 hover:text-slate-800 border-gray-800 ease-out duration-100 dark:hover:text-slate-200 dark:hover:border-slate-200"
+              >
+                Get Started <BsArrowRight className="ml-2" />
+              </Link>
+            </>
+          )}
         </div>
         <div
           className="md:hidden cursor-pointer text-xl mt-2"

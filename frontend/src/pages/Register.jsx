@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import Alerts from "../components/Alerts";
 import { toast } from "react-toastify";
-import Img from "../assets/image.jpg";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +28,7 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (user || status === "succeeded") {
+    if (user && status === "succeeded") {
       setMessage(
         "We have sent you a confirmation email. Please check your inbox "
       );
@@ -44,14 +43,15 @@ const Register = () => {
   ) : (
     <div className="flex w-full items-center justify-around flex-col md:flex-row bg-zinc-50 dark:bg-gray-800 ">
       <div className="w-full h-screen dark:bg-gray-800">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className=""></div>
-          <div className="w-full md:w-[30%] shadow-md dark:bg-gray-700 bg-white h-[91%] md:absolute right-0 top-[3.2rem]">
-            <div className="p-8">
-              <h2 className="text-2xl font-semibold text-gray-500">
+        <div className="grid grid-cols-1 xl:grid-cols-2">
+          <div></div>
+          <div className="mt-12 lg:mx-32 ">
+            <div className="bg-white w-full mt-12 rounded-lg shadow-md p-12 dark:bg-slate-700">
+              <h2 className="text-3xl ml-10 font-semibold capitalize text-slate-700 dark:text-slate-200">
                 Register for free
               </h2>
-              <form onSubmit={submitHandler} className=" mt-10">
+              <form onSubmit={submitHandler} className="mt-10 px-10">
+                {message ? <Alerts message={message} type="info" /> : ""}
                 <FormInput
                   label="email"
                   type="email"
@@ -85,9 +85,12 @@ const Register = () => {
                   placeholder="*************"
                 />
                 <div>
-                  <p className="mb-2 ml-2">
+                  <p className="mb-2 ml-2 dark:text-slate-200">
                     Already have an account?{" "}
-                    <Link to={"/signin"} className="text-blue-800">
+                    <Link
+                      to={"/signin"}
+                      className="text-blue-800 ml-1 dark:text-blue-600"
+                    >
                       Sign in
                     </Link>
                   </p>

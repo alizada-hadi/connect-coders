@@ -43,43 +43,55 @@ const Login = () => {
   return status === "loading" ? (
     <Spinner />
   ) : (
-    <div className="flex items-center justify-around flex-col md:flex-row ">
-      <div className="md:1/8"></div>
-      <div className="md:w-1/2 lg:w-1/2 xl:w-1/4 w-full bg-gray-100  mx-8 my-24 p-8 rounded-lg drop-shadow-md">
-        <h2 className="text-2xl font-Nunito font-semibold mb-3">Login</h2>
-        <form onSubmit={submitHandler}>
-          <FormInput
-            label="email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="youremail@gmail.com"
-          />
+    <div className="flex w-full items-center justify-around flex-col md:flex-row bg-zinc-50 dark:bg-gray-800 ">
+      <div className="w-full h-screen dark:bg-gray-800">
+        <div className="grid grid-cols-1 xl:grid-cols-2">
+          <div></div>
+          <div className="mt-12 lg:mx-32 ">
+            <div className="bg-white w-full mt-12 rounded-lg shadow-md p-12 dark:bg-slate-700">
+              <h2 className="text-3xl ml-10 font-semibold capitalize text-slate-700 dark:text-slate-200">
+                Welcome back
+              </h2>
 
-          <FormInput
-            label="password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="*************"
-          />
-          <div className="flex justify-between flex-wrap">
-            <div className="mb-2 ml-3 text-sm text-blue-800">
-              <Link to="/reset-password">Forgot password?</Link>
-            </div>
-            <div>
-              <p className="mb-2 text-sm">
-                Don't have an account?{" "}
-                <Link to={"/signup"} className="text-blue-800">
-                  Sign up
-                </Link>
-              </p>
+              <form onSubmit={submitHandler} className="mt-10 mx-10">
+                <FormInput
+                  label="email"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="youremail@gmail.com"
+                />
+
+                <FormInput
+                  label="password"
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="*************"
+                />
+                <div className="flex justify-between flex-wrap">
+                  <div className="mb-2 ml-3 text-sm text-blue-800 dark:text-blue-500">
+                    <Link to="/reset-password">Forgot password?</Link>
+                  </div>
+                  <div>
+                    <p className="mb-2 text-sm dark:text-slate-200">
+                      Don't have an account?{" "}
+                      <Link
+                        to={"/signup"}
+                        className="text-blue-800 dark:text-blue-500"
+                      >
+                        Sign up
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+                <Button type="submit" label="Login" />
+              </form>
             </div>
           </div>
-          <Button type="submit" label="Login" />
-        </form>
+        </div>
       </div>
     </div>
   );

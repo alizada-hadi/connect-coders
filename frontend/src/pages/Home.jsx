@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 const Home = () => {
   return (
     <div className="h-screen bg-zinc-50 dark:bg-gray-800">
-      This ids the main page of this web app
+      This ids the main page of this web app\
+      <h1 className="mt-32">hello</h1>
     </div>
   );
 };
