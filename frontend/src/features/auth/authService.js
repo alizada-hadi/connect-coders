@@ -12,6 +12,18 @@ const signin = async (data) => {
   return response.data;
 };
 
+const profile = async (data) => {
+  const { token } = data;
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post("/api/programmer/profile/", data, config);
+  return response.data;
+};
+
 const get_user = async (data) => {
   const { token } = data;
   const config = {
@@ -21,9 +33,9 @@ const get_user = async (data) => {
     },
   };
   const response = await axios.get("/accounts/user/", config);
-
   return response.data;
 };
+
 // activate user
 const activate = async (data) => {
   const response = await axios.post("/accounts/auth/users/activation/", data);
@@ -55,6 +67,7 @@ const authService = {
   reset_password,
   change_password,
   get_user,
+  profile,
 };
 
 export default authService;

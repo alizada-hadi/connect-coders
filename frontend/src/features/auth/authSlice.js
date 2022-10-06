@@ -52,6 +52,23 @@ export const login = createAsyncThunk(
   }
 );
 
+export const profile = createAsyncThunk(
+  "auth/profile/updated/",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.profile(data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const get_user = createAsyncThunk(
   "auth/get/user",
   async (data, thunkAPI) => {
@@ -174,6 +191,18 @@ const authSlice = createSlice({
         state.access = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(profile.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(profile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const programmer = action.payload;
+        state.user = { ...state.user, programmer };
+      })
+      .addCase(profile.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

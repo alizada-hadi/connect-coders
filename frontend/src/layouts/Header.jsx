@@ -16,6 +16,7 @@ const Header = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [dropdown, setDropdown] = useState(false);
   const { access, user } = useSelector((state) => state.auth);
+  const avatar = user?.programmer?.avatar;
   const dispatch = useDispatch();
   const handleChangeTheme = () => {
     setDarkMode(!darkMode);
@@ -80,7 +81,7 @@ const Header = () => {
                 >
                   <img
                     className="w-9 h-9 rounded-full"
-                    src={UserAvatar}
+                    src={user && avatar ? avatar : UserAvatar}
                     alt="user photo"
                   />
                 </button>
@@ -99,7 +100,9 @@ const Header = () => {
                     >
                       <AiOutlineUser className="text-xl mr-3" />
                       <span className="text-lg font-medium">
-                        {user.username}
+                        {user.programmer
+                          ? user.programmer.first_name
+                          : user.username}
                       </span>
                     </Link>
                   </span>
