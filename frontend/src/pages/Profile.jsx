@@ -27,9 +27,7 @@ const Profile = () => {
   const [address, setAddress] = useState(user ? user?.programmer?.address : "");
   const [about, setAbout] = useState(user ? user?.programmer?.about : "");
   const [git, setGit] = useState(user ? user?.programmer?.git : "");
-  const [gender, setGender] = useState(
-    user ? user?.programmer?.gender : "Male"
-  );
+  const [gender, setGender] = useState(user ? user?.programmer?.gender : "");
   const [website, setWebsite] = useState(user ? user?.programmer?.website : "");
   const [avatar, setAvatar] = useState(user ? user?.programmer?.avatar : "");
 
@@ -54,6 +52,10 @@ const Profile = () => {
       token,
     };
     dispatch(profile(data));
+  };
+
+  const changeGenderHandler = (e) => {
+    setGender(e.target.value);
   };
 
   return (
@@ -89,6 +91,34 @@ const Profile = () => {
                 placeholder="+93-7859-58189"
                 onChange={(e) => setPhone(e.target.value)}
               />
+              <div>
+                <span className="text-gray-700 font-semibold">Gender</span>
+                <div className="mt-2">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="gender"
+                      value="Male"
+                      checked={gender == "Male"}
+                      onChange={changeGenderHandler}
+                    />
+                    <span className="ml-2">Male</span>
+                  </label>
+
+                  <label className="inline-flex items-center ml-6">
+                    <input
+                      type="radio"
+                      className="form-radio"
+                      name="gender"
+                      value="Female"
+                      checked={gender == "Female"}
+                      onChange={changeGenderHandler}
+                    />
+                    <span className="ml-2">Female</span>
+                  </label>
+                </div>
+              </div>
               <FormInput
                 label="Git hub"
                 value={git}

@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { get_user } from "../features/auth/authSlice";
+import { fetchProgrammers } from "../features/programmer/programmerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineSearch } from "react-icons/ai";
 import Card from "../components/Card";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { programmers } = useSelector((state) => state.programmers);
+  useEffect(() => {
+    dispatch(fetchProgrammers());
+  }, [dispatch]);
+
   return (
     <div className="h-screen bg-white dark:bg-gray-800">
       <div className="pt-12">
@@ -29,10 +36,12 @@ const Home = () => {
 
       <div className="mx-12 md:mx-24 lg:mx-32">
         <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-2 mt-6">
-          <div className="md:row-span-2">Side bar</div>
+          <div className="">Side bar</div>
           <div className="md:col-start-2 md:col-span-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-              <Card />
+              {programmers.map((programmer, index) => (
+                <Card key={index} programmer={programmer} />
+              ))}
             </div>
           </div>
         </div>

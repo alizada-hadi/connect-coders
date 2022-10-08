@@ -9,6 +9,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import Home from "./pages/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProgrammerDetail from "./pages/ProgrammerDetail";
 import Profile from "./pages/Profile";
 import { useSelector } from "react-redux";
 
@@ -28,6 +29,7 @@ function App() {
               path="/password/reset/confirm/:uid/:token"
               element={<ResetPasswordConfirm />}
             />
+            <Route path="/programmer/:id" element={<ProgrammerDetail />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/" exact element={<Home />} />
               <Route path="/profile" element={<Profile />} />

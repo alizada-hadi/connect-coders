@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import UIReducer from "../features/ui/UISlice";
+import programmerReducer from "../features/programmer/programmerSlice";
 
 import thunk from "redux-thunk";
 
@@ -24,6 +25,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   auth: authReducer,
+  programmers: programmerReducer,
   UI: UIReducer,
 });
 

@@ -145,7 +145,6 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
@@ -166,7 +165,6 @@ const authSlice = createSlice({
       })
       .addCase(reset_password.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
       })
       .addCase(reset_password.rejected, (state, action) => {
         state.status = "failed";
@@ -177,7 +175,6 @@ const authSlice = createSlice({
       })
       .addCase(change_password.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
       })
       .addCase(change_password.rejected, (state, action) => {
         state.status = "failed";

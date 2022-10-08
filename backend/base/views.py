@@ -27,6 +27,7 @@ def programmer_profile(request):
         programmer.first_name = data['first_name']
         programmer.last_name = data['last_name']
         programmer.phone = data['phone']
+        programmer.gender = data["gender"], 
         programmer.address = data['address']
         programmer.about = data['about']
         programmer.git = data['git']
@@ -51,3 +52,11 @@ def programmer_profile(request):
 
         serializer = ProgrammerSerializer(programmer, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(["GET"])
+def programmers(request):
+    programmers = Programmer.objects.all()
+    serializer = ProgrammerSerializer(programmers, many=True)
+    return Response(serializer.data)

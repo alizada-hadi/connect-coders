@@ -5,6 +5,7 @@ from .models import Programmer
 
 
 class ProgrammerSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Programmer
         fields = [
@@ -17,6 +18,10 @@ class ProgrammerSerializer(serializers.ModelSerializer):
             'website', 
             'avatar', 
             'gender',  
-            'about'
+            'about', 
+            'email'
         ]
+
+    def get_email(self, obj):
+        return obj.user.email
 
