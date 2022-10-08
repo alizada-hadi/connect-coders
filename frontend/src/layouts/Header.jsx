@@ -36,7 +36,7 @@ const Header = () => {
   };
   return (
     <div className="w-full h-[50px] fixed bg-zinc-100 dark:bg-gray-800 drop-shadow-sm">
-      <nav className="flex items-center justify-between mx-12 md:mx-20 lg:mx-32">
+      <nav className="flex items-center  justify-between mx-12 md:mx-20 lg:mx-32">
         <div className="flex items-center">
           <div className="flex items-center">
             <div>
