@@ -26,6 +26,24 @@ export const fetchProgrammers = createAsyncThunk(
   }
 );
 
+// * add new skills
+export const addSkill = createAsyncThunk(
+  "programmers/skills/added",
+  async (data, thunkAPI) => {
+    try {
+      return await programmerService.addSkill(data);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
 const programmerSlice = createSlice({
   name: "programmers",
   initialState,
@@ -40,6 +58,17 @@ const programmerSlice = createSlice({
         state.programmers = action.payload;
       })
       .addCase(fetchProgrammers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(addSkill.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addSkill.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.programmer.skills = [...action.payload];
+      })
+      .addCase(addSkill.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

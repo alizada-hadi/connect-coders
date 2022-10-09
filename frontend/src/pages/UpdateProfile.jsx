@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { profile } from "../features/auth/authSlice";
 import Button from "../components/Button";
-import FormInput from "../components/FormInput";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import Spinner from "../components/Spinner";
 
