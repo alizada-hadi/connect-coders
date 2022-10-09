@@ -12,7 +12,7 @@ const ProgrammerDetail = () => {
   return (
     <div className=" dark:bg-gray-800">
       <div className="pt-12 mx-12 md:mx-24 lg:mx-32">
-        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 lg:grid-rows-2 gap-2 mt-12">
           <div className="border-2 rounded-lg px-3 py-4 dark:bg-slate-700">
             <img
               src={programmer.avatar}
@@ -56,7 +56,7 @@ const ProgrammerDetail = () => {
               Send Message
             </button>
           </div>
-          <div className="col-start-2 col-span-4 ml-10">
+          <div className="lg:col-start-2 lg:col-span-4 ml-10">
             <div className="dark:text-slate-200">
               <h1 className="text-4xl uppercase mb-2 leading-8 font-bold">
                 About

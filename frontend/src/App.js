@@ -11,6 +11,8 @@ import Home from "./pages/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProgrammerDetail from "./pages/ProgrammerDetail";
 import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/UpdateProfile";
+import CreateSkill from "./pages/CreateSkill";
 import { useSelector } from "react-redux";
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path="/" exact element={<Home />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/:slug" element={<UpdateProfile />} />
+              <Route path="/new/skill" element={<CreateSkill />} />
             </Route>
           </Routes>
           <ToastContainer />

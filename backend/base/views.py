@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Programmer
-from .serializer import ProgrammerSerializer
+from .models import Programmer, Skill
+from .serializer import ProgrammerSerializer, SkillSerializer
 from accounts.models import User
 
 
@@ -22,6 +22,7 @@ def get_programmer_profile(request):
 def programmer_profile(request):
     user = request.user
     data = request.data
+
     if Programmer.objects.filter(user=user).exists():
         programmer = Programmer.objects.get(user=user)
         programmer.first_name = data['first_name']
@@ -29,9 +30,12 @@ def programmer_profile(request):
         programmer.phone = data['phone']
         programmer.gender = data["gender"], 
         programmer.address = data['address']
+        programmer.speciality = data['speciality']
         programmer.about = data['about']
         programmer.git = data['git']
         programmer.website = data['website']
+        programmer.twitter = data['twitter']
+        programmer.linkedIn = data['linkedIn']
         programmer.avatar = request.FILES.get("avatar")
         programmer.save()
         serializer = ProgrammerSerializer(programmer, many=False)
@@ -44,9 +48,12 @@ def programmer_profile(request):
             gender = data["gender"], 
             phone = data['phone'], 
             address = data['address'],
+            speciality = data['speciality'],
             about = data['about'],
             git = data['git'], 
             website = data['website'],
+            twitter = data['twitter'],
+            linkedIn = data['linkedIn'],
             avatar = request.FILES.get("avatar")
         )
 
@@ -60,3 +67,21 @@ def programmers(request):
     programmers = Programmer.objects.all()
     serializer = ProgrammerSerializer(programmers, many=True)
     return Response(serializer.data)
+
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_new_skill(request):
+    user = request.user
+    data = request.data
+
+    skill = Skill.objects.create(
+        programmer = user.programmer, 
+        title=data["title"], 
+        description =data["description"], 
+        level_of_mastery=data["level"]
+    )
+    serializer = SkillSerializer(skill, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
