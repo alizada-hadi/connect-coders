@@ -48,8 +48,13 @@ class Skill(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     level_of_mastery = models.CharField(max_length=50, null=True, blank=True, choices=LEVEL)
-    slug = models.SlugField(max_length=500, unique=True)
+    slug = models.SlugField(unique=True)
 
-    def safe(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(random_slug() + "-" + self.title)
+        super(Skill, self).save(*args, **kwargs)
+
+    
+    def __str__(self):
+        return self.title

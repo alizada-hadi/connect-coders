@@ -85,3 +85,21 @@ def add_new_skill(request):
     serializer = SkillSerializer(skill, many=False)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_skill(request, slug):
+    user = request.user
+    data=request.data
+    skill = Skill.objects.get(slug=slug)
+
+    skill.programmer=user.programmer
+    skill.title = data['title']
+    skill.description = data['description']
+    skill.level_of_mastery = data['level']
+    skill.save()
+
+    serializer = SkillSerializer(skill, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)

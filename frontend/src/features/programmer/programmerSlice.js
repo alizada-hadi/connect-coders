@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import programmerService from "./programmerService";
 
 const initialState = {
@@ -44,10 +44,33 @@ export const addSkill = createAsyncThunk(
   }
 );
 
+// * update skill
+
+export const updateSkill = createAsyncThunk(
+  "programmers/skill/updated",
+  async (data, thunkAPI) => {
+    try {
+      return await programmerService.updateSkill(data);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
 const programmerSlice = createSlice({
   name: "programmers",
   initialState,
-  reducers: {},
+  reducers: {
+    resetSkill: (state) => {
+      state.skill = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProgrammers.pending, (state) => {
@@ -66,9 +89,26 @@ const programmerSlice = createSlice({
       })
       .addCase(addSkill.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.programmer.skills = [...action.payload];
+        state.skill = action.payload;
       })
       .addCase(addSkill.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updateSkill.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateSkill.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const programmers = current(state.programmers);
+        const programmer = programmers.find(
+          (programmer) => programmer.id === action.payload.programmer
+        );
+        const updatedSkill = programmer.skills.filter(
+          (skill) => skill.id !== action.payload.id
+        );
+      })
+      .addCase(updateSkill.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
@@ -76,3 +116,4 @@ const programmerSlice = createSlice({
 });
 
 export default programmerSlice.reducer;
+export const { resetSkill } = programmerSlice.actions;

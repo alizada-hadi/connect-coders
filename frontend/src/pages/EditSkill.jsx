@@ -3,20 +3,30 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Button from "../components/Button";
-import { addSkill, resetSkill } from "../features/programmer/programmerSlice";
+import {
+  updateSkill,
+  resetSkill,
+} from "../features/programmer/programmerSlice";
 
-const CreateSkill = () => {
+const EditSkill = () => {
+  const { slug } = useParams();
+
   const dispatch = useDispatch();
-  const { access } = useSelector((state) => state.auth);
-  const { programmers, status, skill } = useSelector(
-    (state) => state.programmers
+  const { access, user } = useSelector((state) => state.auth);
+  const { status, skill } = useSelector((state) => state.programmers);
+  const selectedSkill = user?.programmer?.skills.find(
+    (skill) => skill.slug === slug
   );
-  console.log(programmers);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [level, setLevel] = useState();
+
+  const [title, setTitle] = useState(selectedSkill ? selectedSkill?.title : "");
+  const [description, setDescription] = useState(
+    selectedSkill ? selectedSkill?.description : ""
+  );
+  const [level, setLevel] = useState(
+    selectedSkill ? selectedSkill?.level_of_mastery : ""
+  );
 
   const handleLevelChange = (e) => {
     setLevel(e.target.value);
@@ -25,11 +35,8 @@ const CreateSkill = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = access.access;
-    const data = { title, description, level, token };
-    dispatch(addSkill(data));
-    setTitle("");
-    setDescription("");
-    setLevel("");
+    const data = { title, description, level, token, slug };
+    dispatch(updateSkill(data));
     dispatch(resetSkill());
   };
 
@@ -39,7 +46,7 @@ const CreateSkill = () => {
 
   useEffect(() => {
     if (status === "succeeded" && skill) {
-      toast.success("New skill added ");
+      toast.success("Your skill successfully updated ");
     }
   }, [skill]);
 
@@ -111,7 +118,7 @@ const CreateSkill = () => {
               </select>
             </div>
 
-            <Button label="Add" type="submit" />
+            <Button label="Edit" type="submit" />
           </form>
         </div>
       </div>
@@ -119,4 +126,4 @@ const CreateSkill = () => {
   );
 };
 
-export default CreateSkill;
+export default EditSkill;

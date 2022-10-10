@@ -13,13 +13,27 @@ const addSkill = async (data) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.post("api/skill/create/", data, config);
+  const response = await axios.post("/api/skill/create/", data, config);
+  return response.data;
+};
+
+const updateSkill = async (data) => {
+  const { slug, token } = data;
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(`/api/skill/${slug}/`, data, config);
   return response.data;
 };
 
 const programmerService = {
   fetch_programmers,
   addSkill,
+  updateSkill,
 };
 
 export default programmerService;

@@ -2,10 +2,11 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
-import { BsGithub, BsTwitter, BsLinkedin } from "react-icons/bs";
+import { BsGithub, BsTwitter, BsLinkedin, BsTrash } from "react-icons/bs";
 import { FaGlobeAmericas } from "react-icons/fa";
 import { BiEdit } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
+import { MdOutlineCancel } from "react-icons/md";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -23,8 +24,8 @@ const Profile = () => {
                   to={`/${user?.programmer?.slug}`}
                   className="flex items-center px-2 py-1 border rounded-full bg-green-200 dark:bg-gray-800 dark:text-slate-200"
                 >
+                  <BiEdit className="mr-2 text-xl" />
                   <span>Edit</span>
-                  <BiEdit className="ml-2 text-xl" />
                 </Link>
               </div>
               <div>
@@ -111,10 +112,40 @@ const Profile = () => {
                     to={`/new/skill`}
                     className="flex items-center px-4 py-1 border rounded-full bg-green-200 dark:bg-gray-800 dark:text-slate-200"
                   >
+                    <AiOutlinePlus className="mr-2 text-xl" />
                     <span>Add Skill</span>
-                    <AiOutlinePlus className="ml-2 text-xl" />
                   </Link>
                 </div>
+              </div>
+              <div className="mt-12 mb-6 max-w-4xl  border rounded-lg bg-white p-7 dark:bg-slate-700">
+                {user?.programmer?.skills.map((skill, index) => (
+                  <div key={index} className="border-b py-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center">
+                          <h2 className="text-2xl">{skill.title}</h2>
+                          <span className="ml-2 text-xs bg-green-200 p-2 rounded-full dark:bg-gray-800 dark:border dark:border-slate-200">
+                            {skill.level_of_mastery}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <Link
+                          to={`/skill/${skill.slug}`}
+                          className="mr-3 flex items-center bg-green-200 rounded-full px-2 hover:shadow-md dark:bg-green-900"
+                        >
+                          <BiEdit className="text-3xl p-1 " />
+                          <span>Edit</span>
+                        </Link>
+                        <button className="flex items-center bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800">
+                          <MdOutlineCancel className="text-3xl p-1" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-justify mt-3">{skill.description}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
