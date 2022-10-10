@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { fetchProgrammers } from "../features/programmer/programmerSlice";
 import Button from "../components/Button";
 import {
   updateSkill,
@@ -12,13 +13,17 @@ import {
 
 const EditSkill = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { access, user } = useSelector((state) => state.auth);
-  const { status, skill } = useSelector((state) => state.programmers);
-  const selectedSkill = user?.programmer?.skills.find(
-    (skill) => skill.slug === slug
+  const { status, skill, programmers } = useSelector(
+    (state) => state.programmers
   );
+  const programmer = programmers.find(
+    (programmer) => programmer.id === user?.programmer?.id
+  );
+  const selectedSkill = programmer?.skills.find((skill) => skill.slug === slug);
 
   const [title, setTitle] = useState(selectedSkill ? selectedSkill?.title : "");
   const [description, setDescription] = useState(
@@ -41,12 +46,14 @@ const EditSkill = () => {
   };
 
   useEffect(() => {
+    dispatch(fetchProgrammers());
     dispatch(resetSkill());
   }, [dispatch]);
 
   useEffect(() => {
     if (status === "succeeded" && skill) {
       toast.success("Your skill successfully updated ");
+      navigate("/profile");
     }
   }, [skill]);
 

@@ -107,6 +107,7 @@ const programmerSlice = createSlice({
         const updatedSkill = programmer.skills.filter(
           (skill) => skill.id !== action.payload.id
         );
+        state.skill = updatedSkill;
       })
       .addCase(updateSkill.rejected, (state, action) => {
         state.status = "failed";

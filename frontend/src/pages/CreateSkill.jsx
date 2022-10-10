@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { addSkill, resetSkill } from "../features/programmer/programmerSlice";
 
 const CreateSkill = () => {
   const dispatch = useDispatch();
   const { access } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const { programmers, status, skill } = useSelector(
     (state) => state.programmers
   );
@@ -40,10 +41,13 @@ const CreateSkill = () => {
   useEffect(() => {
     if (status === "succeeded" && skill) {
       toast.success("New skill added ");
+      navigate("/profile");
     }
   }, [skill]);
 
-  return (
+  return status === "loading" ? (
+    <Spinner />
+  ) : (
     <div className="pt-12 dark:bg-gray-800 h-screen">
       <div className="max-w-4xl p-8 shadow-inner mx-auto mt-12 border-2 rounded-lg bg-white dark:bg-slate-700">
         <Link to={"/profile"} className="block">

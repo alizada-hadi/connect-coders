@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -7,10 +7,24 @@ import { FaGlobeAmericas } from "react-icons/fa";
 import { BiEdit } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
+import {
+  fetchProgrammers,
+  resetSkill,
+} from "../features/programmer/programmerSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const { user, status } = useSelector((state) => state.auth);
+  const { programmers } = useSelector((state) => state.programmers);
+  useEffect(() => {
+    dispatch(fetchProgrammers());
+    dispatch(resetSkill());
+  }, [dispatch]);
+
+  const programmer = programmers.find(
+    (programmer) => programmer.id === user?.programmer?.id
+  );
+
   return status === "loading" ? (
     <Spinner />
   ) : (
@@ -21,7 +35,7 @@ const Profile = () => {
             <div className="flex flex-col items-center justify-center">
               <div className="my-5 ">
                 <Link
-                  to={`/${user?.programmer?.slug}`}
+                  to={`/${programmer?.slug}`}
                   className="flex items-center px-2 py-1 border rounded-full bg-green-200 dark:bg-gray-800 dark:text-slate-200"
                 >
                   <BiEdit className="mr-2 text-xl" />
@@ -30,24 +44,24 @@ const Profile = () => {
               </div>
               <div>
                 <img
-                  src={user?.programmer?.avatar}
+                  src={programmer?.avatar}
                   className="mx-auto rounded-full w-48 h-48 border-2 border-emerald-800 my-4"
                   alt=""
                 />
                 <h1 className="text-3xl text-center dark:text-slate-200 font-bold">
-                  {user?.programmer?.first_name} {user?.programmer?.last_name}
+                  {programmer?.first_name} {programmer?.last_name}
                 </h1>
                 <p className="text-xl text-gray-500 dark:text-slate-200 font-medium capitalize text-center my-3">
-                  {user?.programmer?.speciality}
+                  {programmer?.speciality}
                 </p>
                 <p className="text-center font-medium dark:text-slate-200">
-                  Lives in - {user?.programmer?.address}
+                  Lives in - {programmer?.address}
                 </p>
 
                 <div className="my-10 flex items-center justify-evenly dark:text-slate-200">
-                  {user?.programmer?.git ? (
+                  {programmer?.git ? (
                     <a
-                      href={`${user?.programmer?.git}/`}
+                      href={`${programmer?.git}/`}
                       className="text-4xl text-blue-900 dark:text-slate-200"
                     >
                       <BsGithub />
@@ -55,9 +69,9 @@ const Profile = () => {
                   ) : (
                     ""
                   )}
-                  {user?.programmer?.twitter ? (
+                  {programmer?.twitter ? (
                     <a
-                      href={`${user?.programmer?.twitter}`}
+                      href={`${programmer?.twitter}`}
                       className="text-4xl text-blue-900 dark:text-slate-200"
                     >
                       <BsTwitter />
@@ -65,9 +79,9 @@ const Profile = () => {
                   ) : (
                     ""
                   )}
-                  {user?.programmer?.website ? (
+                  {programmer?.website ? (
                     <a
-                      href={`${user?.programmer?.website}/`}
+                      href={`${programmer?.website}/`}
                       className="text-4xl text-blue-900 dark:text-slate-200"
                     >
                       <FaGlobeAmericas />
@@ -76,9 +90,9 @@ const Profile = () => {
                     ""
                   )}
 
-                  {user?.programmer?.linkedIn ? (
+                  {programmer?.linkedIn ? (
                     <a
-                      href={`${user?.programmer?.linkedIn}/`}
+                      href={`${programmer?.linkedIn}/`}
                       className="text-4xl text-blue-900 dark:text-slate-200"
                     >
                       <BsLinkedin />
@@ -96,7 +110,7 @@ const Profile = () => {
                 About
               </h1>
               <p className="text-gray-600 text-xl indent-8 text-justify dark:text-slate-200">
-                {user?.programmer?.about}
+                {programmer?.about}
               </p>
             </div>
 
@@ -118,7 +132,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="mt-12 mb-6 max-w-4xl  border rounded-lg bg-white p-7 dark:bg-slate-700">
-                {user?.programmer?.skills.map((skill, index) => (
+                {programmer?.skills.map((skill, index) => (
                   <div key={index} className="border-b py-4">
                     <div className="flex items-center justify-between">
                       <div>
