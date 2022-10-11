@@ -30,10 +30,24 @@ const updateSkill = async (data) => {
   return response.data;
 };
 
+const deleteSkill = async (data) => {
+  const { slug, token } = data;
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.delete(`/api/skill/${slug}/delete/`, config);
+  return response.data;
+};
+
 const programmerService = {
   fetch_programmers,
   addSkill,
   updateSkill,
+  deleteSkill,
 };
 
 export default programmerService;

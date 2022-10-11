@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Programmer, Skill
-from .serializer import ProgrammerSerializer, SkillSerializer
+from .models import Programmer, Project, Skill
+from .serializer import ProgrammerSerializer, ProjectSerializer, SkillSerializer
 from accounts.models import User
 
 
@@ -102,4 +102,43 @@ def update_skill(request, slug):
     skill.save()
 
     serializer = SkillSerializer(skill, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_skill(request, slug):
+    user = request.user
+    skill = Skill.objects.get(slug=slug)
+    skill.delete()
+    return Response({"message" :"Skill removed successfully "}, status=status.HTTP_200_OK)
+
+# ! fetch projects
+
+@api_view(['GET'])
+def all_projects(request):
+    projects = Project.objects.all()
+    serializer = ProjectSerializer(projects, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+# ! create projects
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def create_project(request):
+    user = request.user
+    data  = request.data
+
+    project  = Project.objects.create(
+        programmer=user.programmer, 
+        title=data['title'], 
+        description=data['description'], 
+        live_preview_link=data['live_preview_link'], 
+        source_code_link=data["source_code_link"],
+        cover_photo=request.FILES.get('cover_photo')
+    )
+
+    serializer = ProjectSerializer(project, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)

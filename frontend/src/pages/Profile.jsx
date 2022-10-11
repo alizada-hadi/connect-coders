@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import Modal from "../components/Modal";
+import useModal from "../hooks/useModal";
 import { BsGithub, BsTwitter, BsLinkedin, BsTrash } from "react-icons/bs";
 import { FaGlobeAmericas } from "react-icons/fa";
 import { BiEdit } from "react-icons/bi";
@@ -10,11 +12,12 @@ import { MdOutlineCancel } from "react-icons/md";
 import {
   fetchProgrammers,
   resetSkill,
+  deleteSkill,
 } from "../features/programmer/programmerSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { user, status } = useSelector((state) => state.auth);
+  const { user, status, access } = useSelector((state) => state.auth);
   const { programmers } = useSelector((state) => state.programmers);
   useEffect(() => {
     dispatch(fetchProgrammers());
@@ -24,6 +27,21 @@ const Profile = () => {
   const programmer = programmers.find(
     (programmer) => programmer.id === user?.programmer?.id
   );
+
+  // custom hooks
+  const { isShowing, toggle } = useModal();
+
+  const skillDeleteHandler = (slug) => {
+    const token = access.access;
+    const data = { slug, token };
+    const prompt = window.confirm(
+      "Are you suer you want to delete this skill "
+    );
+    if (prompt) {
+      dispatch(deleteSkill(data));
+      dispatch(fetchProgrammers());
+    }
+  };
 
   return status === "loading" ? (
     <Spinner />
@@ -151,7 +169,10 @@ const Profile = () => {
                           <BiEdit className="text-3xl p-1 " />
                           <span>Edit</span>
                         </Link>
-                        <button className="flex items-center bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800">
+                        <button
+                          onClick={() => skillDeleteHandler(skill.slug)}
+                          className="flex items-center bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800"
+                        >
                           <MdOutlineCancel className="text-3xl p-1" />
                           <span>Delete</span>
                         </button>

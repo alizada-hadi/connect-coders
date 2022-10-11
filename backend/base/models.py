@@ -1,3 +1,5 @@
+from email.policy import default
+from enum import unique
 from django.db import models
 from accounts.models import User
 from django.utils.text import slugify
@@ -8,6 +10,10 @@ import random
 
 def random_slug():
     return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+
+
+def project_random_slug():
+    return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
 
 
 class Programmer(models.Model):
@@ -58,3 +64,52 @@ class Skill(models.Model):
     
     def __str__(self):
         return self.title
+
+
+
+class Project(models.Model):
+    programmer  = models.ForeignKey(Programmer, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    slug = models.SlugField(max_length=250, unique=True)
+    live_preview_link = models.URLField(max_length=250, null=True, blank=True)
+    source_code_link = models.URLField(max_length=250, null=True, blank=True)
+    cover_photo = models.ImageField(upload_to="projects/demo", default="project.jpg")
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(project_random_slug())
+        super(Project, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class TechTools(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name
+
+
+
+class Comment(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    programmer = models.ForeignKey(Programmer, on_delete=models.CASCADE)
+    comment = models.TextField(null=True, blank=True)
+
+
+    def __str__(self):
+        return f"{self.programmer.first_name}'s comment on {self.project.title}"
+
+
+class Vote(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    programmer = models.ForeignKey(Programmer, on_delete=models.CASCADE)
+    vote = models.BigIntegerField(default=0)
+
+
+    def __str__(self):
+        return f"{self.programmer.first_name}'s vote on {self.project.title}"

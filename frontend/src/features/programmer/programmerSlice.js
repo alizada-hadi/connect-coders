@@ -63,6 +63,23 @@ export const updateSkill = createAsyncThunk(
   }
 );
 
+export const deleteSkill = createAsyncThunk(
+  "programmers/skill/deleted",
+  async (data, thunkAPI) => {
+    try {
+      return await programmerService.deleteSkill(data);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
 const programmerSlice = createSlice({
   name: "programmers",
   initialState,
@@ -110,6 +127,16 @@ const programmerSlice = createSlice({
         state.skill = updatedSkill;
       })
       .addCase(updateSkill.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(deleteSkill.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteSkill.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(deleteSkill.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
