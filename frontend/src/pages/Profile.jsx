@@ -46,10 +46,10 @@ const Profile = () => {
   return status === "loading" ? (
     <Spinner />
   ) : (
-    <div className="pt-12 bg-white dark:bg-gray-800 h-screen">
+    <div className="pt-12 bg-white dark:bg-gray-800 ">
       <div className="mx-12 md:mx-24 lg:mx-32">
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 lg:grid-rows-2 gap-2 mt-12">
-          <div className="border-2 rounded-lg px-3 py-4 dark:bg-slate-700">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4  gap-2 mt-12">
+          <div className="border-2 rounded-lg px-3 py-4 dark:bg-slate-700 fixed max-w-sm ">
             <div className="flex flex-col items-center justify-center">
               <div className="my-5 ">
                 <Link
@@ -132,7 +132,7 @@ const Profile = () => {
               </p>
             </div>
 
-            <div className="dark:text-slate-200 mt-8">
+            <div className="dark:text-slate-200 mt-8 max-w-4xl">
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-4xl uppercase mb-2 leading-8 font-bold">
@@ -149,7 +149,7 @@ const Profile = () => {
                   </Link>
                 </div>
               </div>
-              <div className="mt-12 mb-6 max-w-4xl  border rounded-lg bg-white p-7 dark:bg-slate-700">
+              <div className="mt-6 mb-6 max-w-4xl  border rounded-lg bg-white p-7 dark:bg-slate-700">
                 {programmer?.skills.map((skill, index) => (
                   <div key={index} className="border-b py-4">
                     <div className="flex items-center justify-between">
@@ -179,6 +179,66 @@ const Profile = () => {
                       </div>
                     </div>
                     <p className="text-justify mt-3">{skill.description}</p>
+                  </div>
+                ))}
+              </div>
+              {/* projects */}
+
+              <div className="dark:text-slate-200 mt-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-4xl uppercase mb-2 leading-8 font-bold">
+                      Projects
+                    </h1>
+                  </div>
+                  <div>
+                    <Link
+                      to={`/new/project`}
+                      className="flex items-center px-4 py-1 border rounded-full bg-green-200 dark:bg-gray-800 dark:text-slate-200"
+                    >
+                      <AiOutlinePlus className="mr-2 text-xl" />
+                      <span>Add Project</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="my-6 max-w-4xl border rounded-lg bg-white p-7 dark:bg-slate-700">
+                {programmer?.projects.map((project, index) => (
+                  <div key={index} className=" border-b py-4">
+                    <div className="flex justify-between">
+                      <div>
+                        <div className="flex">
+                          <div>
+                            <img
+                              src={project?.cover_photo}
+                              className="w-48 h-32 rounded-lg"
+                              alt=""
+                            />
+                          </div>
+                          <div className="ml-4">
+                            <h1 className="text-2xl text-blue-500">
+                              <Link to={""}>{project?.title}</Link>
+                            </h1>
+                            <p className="text-justify text-lg text-gray-600 dark:text-slate-200">
+                              {project?.description.substring(0, 60)}...
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <Link
+                          to={`/`}
+                          className="mr-3 flex items-center bg-green-200 rounded-full px-2 hover:shadow-md dark:bg-green-900"
+                        >
+                          <BiEdit className="text-3xl p-1" />
+                          <span>Edit</span>
+                        </Link>
+                        <button className="flex items-center mt-2 bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800">
+                          <MdOutlineCancel className="text-3xl p-1" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

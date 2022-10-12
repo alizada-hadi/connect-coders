@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import UpdateProfile from "./pages/UpdateProfile";
 import CreateSkill from "./pages/CreateSkill";
 import EditSkill from "./pages/EditSkill";
+import CreateProject from "./pages/CreateProject";
 import { useSelector } from "react-redux";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
               <Route path="/:slug" element={<UpdateProfile />} />
               <Route path="/new/skill" element={<CreateSkill />} />
               <Route path="/skill/:slug" element={<EditSkill />} />
+              <Route path="/new/project" element={<CreateProject />} />
             </Route>
           </Routes>
           <ToastContainer />

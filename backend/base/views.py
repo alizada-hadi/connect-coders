@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Programmer, Project, Skill
+from .models import Programmer, Project, Skill, TechTools
 from .serializer import ProgrammerSerializer, ProjectSerializer, SkillSerializer
 from accounts.models import User
 
@@ -130,6 +130,13 @@ def all_projects(request):
 def create_project(request):
     user = request.user
     data  = request.data
+    print("hello")
+    print(data)
+    print('good bye')
+
+    techLenght = data['techLength']
+
+    techLenght = int(techLenght)
 
     project  = Project.objects.create(
         programmer=user.programmer, 
@@ -139,6 +146,14 @@ def create_project(request):
         source_code_link=data["source_code_link"],
         cover_photo=request.FILES.get('cover_photo')
     )
+
+    for i in range(techLenght):
+        tools = "tools." + f"{i}." +"tool"
+        name = data[tools]
+        TechTools.objects.create(
+            project=project, 
+            name=name
+        )
 
     serializer = ProjectSerializer(project, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)

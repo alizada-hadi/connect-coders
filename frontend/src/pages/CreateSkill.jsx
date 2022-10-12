@@ -14,7 +14,7 @@ const CreateSkill = () => {
   const { programmers, status, skill } = useSelector(
     (state) => state.programmers
   );
-  console.log(programmers);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState();

@@ -75,6 +75,7 @@ class Project(models.Model):
     live_preview_link = models.URLField(max_length=250, null=True, blank=True)
     source_code_link = models.URLField(max_length=250, null=True, blank=True)
     cover_photo = models.ImageField(upload_to="projects/demo", default="project.jpg")
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     def save(self, *args, **kwargs):
@@ -99,6 +100,7 @@ class Comment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     programmer = models.ForeignKey(Programmer, on_delete=models.CASCADE)
     comment = models.TextField(null=True, blank=True)
+    commented_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
