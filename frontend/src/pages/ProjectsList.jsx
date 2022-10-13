@@ -1,24 +1,27 @@
 import React, { useEffect } from "react";
-import { get_user } from "../features/auth/authSlice";
-import { fetchProgrammers } from "../features/programmer/programmerSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineSearch } from "react-icons/ai";
-import Card from "../components/Card";
+import { fetchProjects } from "../features/projects/projectsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "../components/Spinner";
+import ProjectCard from "../components/ProjectCard";
 
-const Home = () => {
+const ProjectsList = () => {
   const dispatch = useDispatch();
-  const { programmers } = useSelector((state) => state.programmers);
+  const { projects, status } = useSelector((state) => state.projects);
+
   useEffect(() => {
-    dispatch(fetchProgrammers());
+    dispatch(fetchProjects());
   }, [dispatch]);
 
-  return (
+  return status === "loading" ? (
+    <Spinner />
+  ) : (
     <div className="h-screen bg-white dark:bg-gray-800">
       <div className="pt-12">
         <div className="h-80 bg-slate-100 dark:bg-slate-700">
-          <h1 className="text-center font-Nunito text-5xl pt-10 capitalize dark:text-slate-200">
-            We are connecting the{" "}
-            <span className="uppercase font-bold leading-10">programmers</span>
+          <h1 className="text-center font-Roboto text-5xl pt-10 capitalize dark:text-slate-200">
+            programmers best{" "}
+            <span className="uppercase font-bold leading-10">Projects</span>
           </h1>
           <div className="w-full px-10 flex-col flex gap-3 md:flex-row md:px-0 items-center justify-center mt-4 md:mt-16">
             <input
@@ -39,8 +42,8 @@ const Home = () => {
           <div className="">Side bar</div>
           <div className="md:col-start-2 md:col-span-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-              {programmers.map((programmer, index) => (
-                <Card key={index} programmer={programmer} />
+              {projects.map((project, index) => (
+                <ProjectCard key={index} project={project} />
               ))}
             </div>
           </div>
@@ -50,4 +53,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ProjectsList;

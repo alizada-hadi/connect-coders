@@ -15,12 +15,18 @@ import {
   deleteSkill,
 } from "../features/programmer/programmerSlice";
 
+import {
+  fetchProjects,
+  deleteProject,
+} from "../features/projects/projectsSlice";
+
 const Profile = () => {
   const dispatch = useDispatch();
   const { user, status, access } = useSelector((state) => state.auth);
   const { programmers } = useSelector((state) => state.programmers);
   useEffect(() => {
     dispatch(fetchProgrammers());
+    dispatch(fetchProjects());
     dispatch(resetSkill());
   }, [dispatch]);
 
@@ -29,7 +35,6 @@ const Profile = () => {
   );
 
   // custom hooks
-  const { isShowing, toggle } = useModal();
 
   const skillDeleteHandler = (slug) => {
     const token = access.access;
@@ -39,6 +44,17 @@ const Profile = () => {
     );
     if (prompt) {
       dispatch(deleteSkill(data));
+      dispatch(fetchProgrammers());
+    }
+  };
+
+  const projectDeleteHandler = (slug) => {
+    const token = access.access;
+    const data = { slug, token };
+    const qs = window.confirm("Are you sure you want to delete this project? ");
+    if (qs) {
+      dispatch(deleteProject(data));
+      dispatch(fetchProjects());
       dispatch(fetchProgrammers());
     }
   };
@@ -227,13 +243,16 @@ const Profile = () => {
                       </div>
                       <div>
                         <Link
-                          to={`/`}
+                          to={`/project/${project?.slug}`}
                           className="mr-3 flex items-center bg-green-200 rounded-full px-2 hover:shadow-md dark:bg-green-900"
                         >
                           <BiEdit className="text-3xl p-1" />
                           <span>Edit</span>
                         </Link>
-                        <button className="flex items-center mt-2 bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800">
+                        <button
+                          onClick={(e) => projectDeleteHandler(project?.slug)}
+                          className="flex items-center mt-2 bg-red-300 rounded-full px-2 hover:shadow-md dark:bg-red-800"
+                        >
                           <MdOutlineCancel className="text-3xl p-1" />
                           <span>Delete</span>
                         </button>

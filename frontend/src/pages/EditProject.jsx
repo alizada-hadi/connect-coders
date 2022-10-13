@@ -3,34 +3,47 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { BsPlusLg } from "react-icons/bs";
 import { ImCancelCircle } from "react-icons/im";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { fetchProgrammers } from "../features/programmer/programmerSlice";
 import {
-  createProject,
+  updateProject,
   resetProject,
+  fetchProjects,
 } from "../features/projects/projectsSlice";
 
-const CreateProject = () => {
+const EditProject = () => {
   const dispatch = useDispatch();
-  const { access } = useSelector((state) => state.auth);
+  const { slug } = useParams();
   const navigate = useNavigate();
-  const { programmers, status } = useSelector((state) => state.programmers);
+  const { access } = useSelector((state) => state.auth);
   const { projects, status: projectStatus } = useSelector(
     (state) => state.projects
   );
 
+  const project = projects.find((project) => project.slug === slug);
   let techLength = 0;
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [live_preview_link, setLive_preview_link] = useState("");
-  const [source_code_link, setSource_code_link] = useState("");
-  const [cover_photo, setCover_photo] = useState("");
-  const [tools, setTools] = useState([]);
+  const [title, setTitle] = useState(project ? project?.title : "");
+  const [description, setDescription] = useState(
+    project ? project?.description : ""
+  );
+  const [live_preview_link, setLive_preview_link] = useState(
+    project ? project?.live_preview_link : ""
+  );
+  const [source_code_link, setSource_code_link] = useState(
+    project ? project?.source_code_link : ""
+  );
+  const [cover_photo, setCover_photo] = useState(
+    project ? project?.cover_photo : ""
+  );
+  const [tools, setTools] = useState(project ? project?.techs : []);
 
   techLength = tools?.length;
+
+  useEffect(() => {
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
   const handleUploadImage = (e) => {
     const file = e.target.files[0];
@@ -49,11 +62,10 @@ const CreateProject = () => {
       token,
       tools,
       techLength,
+      slug,
     };
-    dispatch(createProject(data));
-    // dispatch(resetProject());
-    dispatch(fetchProgrammers());
-    toast.success("Project created successfully ");
+    dispatch(updateProject(data));
+    toast.success("Project updated successfully ");
     navigate("/profile");
   };
 
@@ -64,23 +76,16 @@ const CreateProject = () => {
   };
 
   const addFields = () => {
-    let newTool = { tool: "" };
+    let newTool = { name: "" };
     setTools([...tools, newTool]);
   };
 
   const removeFields = (techs) => {
-    let filteredTools = tools.filter((tool) => tool.tool !== techs);
+    let filteredTools = tools.filter((tool) => tool.name !== techs);
     setTools([...filteredTools]);
   };
 
-  //   useEffect(() => {
-  //     if (status === "succeeded" && skill) {
-  //       toast.success("New skill added ");
-  //       navigate("/profile");
-  //     }
-  //   }, [skill]);
-
-  return status === "loading" ? (
+  return projectStatus === "loading" ? (
     <Spinner />
   ) : (
     <div className="pt-12 dark:bg-gray-800 h-screen">
@@ -177,6 +182,7 @@ const CreateProject = () => {
                   className="block w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   id="file_input"
                   type="file"
+                  required
                 />
               </div>
             </div>
@@ -196,14 +202,14 @@ const CreateProject = () => {
                     >
                       <input
                         type="text"
-                        name="tool"
-                        value={tool.tool}
+                        name="name"
+                        value={tool.name}
                         onChange={(e) => handleToolChange(e, index)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                       <button
                         type="button"
-                        onClick={() => removeFields(tool.tool)}
+                        onClick={() => removeFields(tool.name)}
                         className="ml-3 border rounded-lg py-3 px-5"
                       >
                         <ImCancelCircle className="text-2xl text-red-500" />
@@ -231,7 +237,7 @@ const CreateProject = () => {
             </div>
           </div>
           <button className="ml-10 px-8 py-3 rounded-lg text-lg border hover:shadow-md">
-            Create
+            Update
           </button>
         </form>
       </div>
@@ -239,4 +245,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default EditProject;

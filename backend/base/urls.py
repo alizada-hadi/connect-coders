@@ -13,4 +13,6 @@ urlpatterns = [
     # ? projects routes
     path("projects/", views.all_projects, name="all_projects"),
     path("project/create/", views.create_project, name="new_projects"),
+    path("project/<slug:slug>/update/", views.update_project, name="update_project"), 
+    path("project/<slug:slug>/delete/", views.delete_project, name="delete_project")
 ]

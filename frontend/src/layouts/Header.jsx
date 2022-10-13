@@ -3,8 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRight, BsMoonStars, BsSun } from "react-icons/bs";
 import { VscSignOut } from "react-icons/vsc";
 import { FiSettings } from "react-icons/fi";
-import { AiOutlineUser, AiOutlineDashboard } from "react-icons/ai";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineHome } from "react-icons/ai";
+import {
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineHome,
+  AiOutlineUser,
+  AiOutlineDashboard,
+} from "react-icons/ai";
+import { GrProjects } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
 import { changeTheme } from "../features/ui/UISlice";
@@ -40,19 +46,27 @@ const Header = () => {
         <div className="flex items-center">
           <div className="flex items-center">
             <div>
-              <h1 className="text-4xl dark:text-slate-100 font-semibold text-slate-500 mr-12">
+              <h1 className="text-4xl dark:text-slate-200 font-semibold text-slate-500 mr-12">
                 CC
               </h1>
             </div>
             <div className=" ">
               <ul className="ml-12 hidden dark:text-slate-100 text-lg md:flex">
                 {access ? (
-                  <li>
-                    <Link to={"/"} className="flex items-center">
-                      <AiOutlineHome className="mr-2" />
-                      Home
-                    </Link>
-                  </li>
+                  <>
+                    <li className="ml-5">
+                      <Link to={"/"} className="flex items-center">
+                        <AiOutlineHome className="mr-2" />
+                        Home
+                      </Link>
+                    </li>
+                    <li className="ml-5">
+                      <Link to={"/projects"} className="flex items-center">
+                        <GrProjects className="mr-2 " />
+                        Projects
+                      </Link>
+                    </li>
+                  </>
                 ) : (
                   ""
                 )}

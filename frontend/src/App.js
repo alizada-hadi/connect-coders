@@ -15,6 +15,10 @@ import UpdateProfile from "./pages/UpdateProfile";
 import CreateSkill from "./pages/CreateSkill";
 import EditSkill from "./pages/EditSkill";
 import CreateProject from "./pages/CreateProject";
+import EditProject from "./pages/EditProject";
+import ProjectsList from "./pages/ProjectsList";
+import ProjectDetail from "./pages/ProjectDetail";
+
 import { useSelector } from "react-redux";
 
 function App() {
@@ -33,7 +37,10 @@ function App() {
               path="/password/reset/confirm/:uid/:token"
               element={<ResetPasswordConfirm />}
             />
+
             <Route path="/programmer/:id" element={<ProgrammerDetail />} />
+            <Route path="/projects" element={<ProjectsList />} />
+            <Route path="/project/:slug" element={<ProjectDetail />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/" exact element={<Home />} />
               <Route path="/profile" element={<Profile />} />
@@ -41,6 +48,7 @@ function App() {
               <Route path="/new/skill" element={<CreateSkill />} />
               <Route path="/skill/:slug" element={<EditSkill />} />
               <Route path="/new/project" element={<CreateProject />} />
+              <Route path="/project/:slug" element={<EditProject />} />
             </Route>
           </Routes>
           <ToastContainer />

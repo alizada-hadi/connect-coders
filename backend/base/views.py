@@ -130,9 +130,6 @@ def all_projects(request):
 def create_project(request):
     user = request.user
     data  = request.data
-    print("hello")
-    print(data)
-    print('good bye')
 
     techLenght = data['techLength']
 
@@ -157,3 +154,47 @@ def create_project(request):
 
     serializer = ProjectSerializer(project, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_project(request, slug):
+    
+    project = Project.objects.get(slug=slug)
+    user = request.user
+    data = request.data
+
+    techLenght = data['techLength']
+    techLenght = int(techLenght)
+
+    project.programmer = user.programmer
+    project.title = data['title']
+    project.description = data['description']
+    project.live_preview_link = data['live_preview_link']
+    project.source_code_link = data['source_code_link']
+    project.cover_photo = request.FILES.get('cover_photo')
+
+    for j in project.techtools_set.all():
+        j.delete()
+
+    for i in range(techLenght):
+        tools = "tools." + f"{i}." +"name"
+        name = data[tools]
+        TechTools.objects.get_or_create(
+            project=project, 
+            name=name
+        )
+    project.save()
+
+    serializer = ProjectSerializer(project, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_project(request, slug):
+    user = request.user
+    project = Project.objects.get(slug=slug)
+    if user.programmer == project.programmer:
+        project.delete()
+        return Response({"message" : "project removed successfully "}, status=status.HTTP_200_OK)
+    return Response({"message" : "you are not authorize to delete this project "}, status=status.HTTP_400_BAD_REQUEST)
