@@ -10,7 +10,7 @@ import {
   AiOutlineUser,
   AiOutlineDashboard,
 } from "react-icons/ai";
-import { GrProjects } from "react-icons/gr";
+import { GrProjects, GrGroup } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
 import { changeTheme } from "../features/ui/UISlice";
@@ -56,13 +56,13 @@ const Header = () => {
                   <>
                     <li className="ml-5">
                       <Link to={"/"} className="flex items-center">
-                        <AiOutlineHome className="mr-2" />
-                        Home
+                        <GrGroup className="mr-2 dark:bg-slate-200" />
+                        Programmers
                       </Link>
                     </li>
                     <li className="ml-5">
                       <Link to={"/projects"} className="flex items-center">
-                        <GrProjects className="mr-2 " />
+                        <GrProjects className="mr-2 dark:bg-slate-200" />
                         Projects
                       </Link>
                     </li>

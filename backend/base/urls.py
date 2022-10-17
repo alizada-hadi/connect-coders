@@ -14,5 +14,15 @@ urlpatterns = [
     path("projects/", views.all_projects, name="all_projects"),
     path("project/create/", views.create_project, name="new_projects"),
     path("project/<slug:slug>/update/", views.update_project, name="update_project"), 
-    path("project/<slug:slug>/delete/", views.delete_project, name="delete_project")
+    path("project/<slug:slug>/delete/", views.delete_project, name="delete_project"), 
+
+    # ? votes
+    path("vote/<slug:slug>/", views.vote, name="up_vote"), 
+
+    # ? add comments
+    path("comment/<slug:slug>/", views.add_comment, name="add_comment"), 
+    path("comments/fetch/<slug:slug>/", views.fetchAllComments, name="all_comments"),
+
+    # ? get skills
+    path("skills/all/", views.getAllSkills, name="get_skills")
 ]

@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
-import Modal from "../components/Modal";
-import useModal from "../hooks/useModal";
 import { BsGithub, BsTwitter, BsLinkedin, BsTrash } from "react-icons/bs";
 import { FaGlobeAmericas } from "react-icons/fa";
 import { BiEdit } from "react-icons/bi";
@@ -30,7 +28,7 @@ const Profile = () => {
     dispatch(resetSkill());
   }, [dispatch]);
 
-  const programmer = programmers.find(
+  const programmer = programmers?.results?.find(
     (programmer) => programmer.id === user?.programmer?.id
   );
 
@@ -65,7 +63,7 @@ const Profile = () => {
     <div className="pt-12 bg-white dark:bg-gray-800 ">
       <div className="mx-12 md:mx-24 lg:mx-32">
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4  gap-2 mt-12">
-          <div className="border-2 rounded-lg px-3 py-4 dark:bg-slate-700 fixed max-w-sm ">
+          <div className="border-2 rounded-lg px-3 py-4 dark:bg-slate-700 max-h-[40rem] ">
             <div className="flex flex-col items-center justify-center">
               <div className="my-5 ">
                 <Link

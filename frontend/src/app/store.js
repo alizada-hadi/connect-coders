@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import UIReducer from "../features/ui/UISlice";
 import programmerReducer from "../features/programmer/programmerSlice";
 import projectsReducer from "../features/projects/projectsSlice";
+import skillsReducer from "../features/skills/skillsSlice";
 
 import thunk from "redux-thunk";
 
@@ -28,6 +29,7 @@ const reducers = combineReducers({
   auth: authReducer,
   programmers: programmerReducer,
   projects: projectsReducer,
+  skills: skillsReducer,
   UI: UIReducer,
 });
 

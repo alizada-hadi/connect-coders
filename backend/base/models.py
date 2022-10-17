@@ -76,6 +76,8 @@ class Project(models.Model):
     source_code_link = models.URLField(max_length=250, null=True, blank=True)
     cover_photo = models.ImageField(upload_to="projects/demo", default="project.jpg")
     created_at = models.DateTimeField(auto_now_add=True)
+    up_vote = models.ManyToManyField(Programmer, null=True, blank=True, related_name="programmer_up")
+    down_vote = models.ManyToManyField(Programmer, null=True, blank=True, related_name="programmer_down")
 
 
     def save(self, *args, **kwargs):

@@ -1,48 +1,68 @@
-import React, { useEffect } from "react";
-import { get_user } from "../features/auth/authSlice";
+import React, { useEffect, useState } from "react";
 import { fetchProgrammers } from "../features/programmer/programmerSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineSearch } from "react-icons/ai";
+import { fetchSkills } from "../features/skills/skillsSlice";
+import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
+import Filter from "../components/Filter";
+import Pagination from "../components/Pagination";
+import SearchBox from "../components/SearchBox";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const query = location.search;
+
   const { programmers } = useSelector((state) => state.programmers);
+  const { skills } = useSelector((state) => state.skills);
+  let [uniqueSkill, setUniqueSkill] = useState([]);
   useEffect(() => {
-    dispatch(fetchProgrammers());
-  }, [dispatch]);
+    dispatch(fetchProgrammers(query));
+    dispatch(fetchSkills());
+    const items = [];
+    for (let i = 0; i < skills.length; i++) {
+      items.push(skills[i].title);
+    }
+    const unique = [...new Set(items)];
+    setUniqueSkill(unique);
+  }, [dispatch, query]);
 
   return (
     <div className="h-screen bg-white dark:bg-gray-800">
       <div className="pt-12">
         <div className="h-80 bg-slate-100 dark:bg-slate-700">
-          <h1 className="text-center font-Nunito text-5xl pt-10 capitalize dark:text-slate-200">
+          <h1 className="text-center font-Roboto text-5xl pt-10 capitalize dark:text-slate-200">
             We are connecting the{" "}
             <span className="uppercase font-bold leading-10">programmers</span>
           </h1>
-          <div className="w-full px-10 flex-col flex gap-3 md:flex-row md:px-0 items-center justify-center mt-4 md:mt-16">
-            <input
-              type="text"
-              className="w-full md:w-[25rem] lg:w-[35rem] h-16 rounded-lg text-lg pl-3 focus:outline-none focus:ring focus:ring-blue-300 dark:text-slate-200 dark:bg-gray-800"
-              placeholder="Search by names, skills, projects"
-            />
-            <button className="h-16 bg-white w-full md:w-48 md:ml-1 hover:border-2 border-slate-700 dark:hover:border-slate-200 rounded-lg text-xl flex items-center justify-center dark:text-slate-200 dark:bg-gray-800">
-              <span>Search</span>
-              <AiOutlineSearch className="ml-2 text-2xl" />
-            </button>
-          </div>
+          <SearchBox />
         </div>
       </div>
-
       <div className="mx-12 md:mx-24 lg:mx-32">
         <div className="grid grid-cols-1 md:grid-cols-4  gap-2 mt-6">
-          <div className="">Side bar</div>
-          <div className="md:col-start-2 md:col-span-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-              {programmers.map((programmer, index) => (
-                <Card key={index} programmer={programmer} />
+          <div className="mr-12">
+            <h1 className="capitalize text-2xl mb-4 font-medium font-Roboto text-gray-600 mr-10 dark:text-slate-200">
+              Filter by skills
+            </h1>
+            <div className="grid grid-cols-3">
+              {uniqueSkill?.map((skill, index) => (
+                <Filter key={index} item={skill} />
               ))}
             </div>
+          </div>
+          <div className="md:col-start-2 md:col-span-4">
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                {programmers?.results?.map((programmer, index) => (
+                  <Card key={index} programmer={programmer} />
+                ))}
+              </div>
+            </div>
+            {programmers?.results?.length > 10 ? (
+              <Pagination items={programmers} />
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

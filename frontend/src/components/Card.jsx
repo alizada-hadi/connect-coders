@@ -1,6 +1,7 @@
 import React from "react";
 import Avatar from "../assets/users/avatar-2.jpg";
 import { Link } from "react-router-dom";
+import Badge from "./Badge";
 
 const Card = ({ programmer }) => {
   return (
@@ -19,12 +20,9 @@ const Card = ({ programmer }) => {
             {programmer.about.substring(0, 150)}...
           </p>
           <div className="grid grid-cols-3 items-center my-3 px-3 gap-2">
-            <div className="text-sm px-3 py-1 bg-slate-200 text-gray-800 rounded-full dark:bg-gray-800 dark:text-slate-200">
-              HTML
-            </div>
-            <div className="text-sm px-3 py-1 bg-slate-200 text-gray-800 rounded-full dark:bg-gray-800 dark:text-slate-200">
-              Python
-            </div>
+            {programmer?.skills.slice(0, 3).map((skill, index) => (
+              <Badge key={index} item={skill.title} bgColor="#dbeafe" />
+            ))}
           </div>
         </div>
       </div>

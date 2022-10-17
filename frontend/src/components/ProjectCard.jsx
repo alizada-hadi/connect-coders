@@ -1,21 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProgrammers } from "../features/programmer/programmerSlice";
+import React from "react";
 import Badge from "./Badge";
 import { Link } from "react-router-dom";
 
 const ProjectCard = ({ project }) => {
-  const dispatch = useDispatch();
-  const { programmers } = useSelector((state) => state.programmers);
-  const programmer = programmers.find(
-    (programmer) => programmer.id === project.programmer
-  );
-
-  useEffect(() => {
-    dispatch(fetchProgrammers());
-  }, [dispatch]);
   return (
-    <div className="border rounded-lg hover:shadow-md">
+    <div className="border rounded-lg hover:shadow-md dark:bg-slate-700">
       <Link to={`/project/${project.slug}`}>
         <img
           src={project.cover_photo}
@@ -29,11 +18,24 @@ const ProjectCard = ({ project }) => {
             {project?.title.substring(0, 20)}
           </h1>
         </Link>
-        <p className="capitalize text-green-600 text-md mb-3">
-          by {programmer?.first_name} {programmer?.last_name}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="capitalize text-green-600 text-md">
+            by {project?.programmer?.first_name}{" "}
+            {project?.programmer?.last_name}
+          </p>
 
-        <p className="text-justify indent-4 text-gray-700 dark:text-slate-200">
+          <div
+            className="px-2.5 py-0.5 rounded-full text-sm"
+            style={{
+              backgroundColor:
+                project?.total_vote_count > 0 ? "#86efac" : "#fca5a5",
+            }}
+          >
+            vote {project?.total_vote_count}
+          </div>
+        </div>
+
+        <p className="text-justify indent-4 text-gray-700 dark:text-slate-200 mt-2">
           {project?.description.substring(0, 70)}...
         </p>
         <div className="grid grid-cols-3 my-1">

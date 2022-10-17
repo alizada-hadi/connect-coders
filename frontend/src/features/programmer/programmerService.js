@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const fetch_programmers = async () => {
-  const response = await axios.get("/api/programmers/");
+const fetch_programmers = async (query = "") => {
+  const response = await axios.get(`/api/programmers/${query}`);
+
   return response.data;
 };
 

@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Programmer, Project, Skill, TechTools
-from .serializer import ProgrammerSerializer, ProjectSerializer, SkillSerializer
+from .models import Programmer, Project, Skill, TechTools, Comment
+from .serializer import CommentSerializer, ProgrammerSerializer, ProjectSerializer, SkillSerializer
 from accounts.models import User
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['GET'])
@@ -64,9 +66,20 @@ def programmer_profile(request):
 
 @api_view(["GET"])
 def programmers(request):
-    programmers = Programmer.objects.all()
-    serializer = ProgrammerSerializer(programmers, many=True)
-    return Response(serializer.data)
+    query = request.query_params.get("query")
+    if query == None:
+        query = ''
+
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    programmers = Programmer.objects.filter(
+        Q(first_name__icontains=query) | 
+        Q(last_name__icontains=query) | 
+        Q(skill__title=query)
+    ).distinct()
+    pages = paginator.paginate_queryset(programmers, request)
+    serializer = ProgrammerSerializer(pages, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -118,11 +131,21 @@ def delete_skill(request, slug):
 
 @api_view(['GET'])
 def all_projects(request):
-    projects = Project.objects.all()
-    serializer = ProjectSerializer(projects, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+    query = request.query_params.get("query")
+    if query == None:
+        query = ''
+    
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    projects = Project.objects.filter(
+        Q(title__icontains=query) | 
+        Q(description__icontains=query) | 
+        Q(programmer__first_name__icontains=query) | 
+        Q(programmer__last_name__icontains=query)
+    ).distinct()
+    pages = paginator.paginate_queryset(projects, request)
+    serializer = ProjectSerializer(pages, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 # ! create projects
 @api_view(["POST"])
@@ -198,3 +221,54 @@ def delete_project(request, slug):
         project.delete()
         return Response({"message" : "project removed successfully "}, status=status.HTTP_200_OK)
     return Response({"message" : "you are not authorize to delete this project "}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def vote(request, slug):
+    user = request.user
+    data = request.data
+    project = Project.objects.get(slug=slug)
+    
+    if data["vote"] == "up":
+        project.down_vote.remove(user.programmer)
+        project.up_vote.add(user.programmer)
+    elif data["vote"] == "down":
+        project.up_vote.remove(user.programmer)
+        project.down_vote.add(user.programmer)
+    project.save()
+    return Response({"message" : "project voted"}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_comment(request, slug):
+    user = request.user
+    data = request.data
+    project = Project.objects.get(slug=slug)
+
+    comment = Comment.objects.create(
+        project=project, 
+        programmer=user.programmer, 
+        comment=data["comment"]
+    )
+    serializer = CommentSerializer(comment, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def fetchAllComments(request, slug):
+    project = Project.objects.get(slug=slug)
+    comments = project.comment_set.all()
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data)
+
+
+
+# ! fetch skills
+@api_view(['GET'])
+def getAllSkills(request):
+    skills = Skill.objects.all()
+    serializer = SkillSerializer(skills, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

@@ -11,9 +11,9 @@ const initialState = {
 
 export const fetchProgrammers = createAsyncThunk(
   "programmer/fetched",
-  async (thunkAPI) => {
+  async (query, thunkAPI) => {
     try {
-      return await programmerService.fetch_programmers();
+      return await programmerService.fetch_programmers(query);
     } catch (error) {
       const response =
         (error.response &&

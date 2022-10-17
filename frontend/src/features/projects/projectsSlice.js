@@ -4,6 +4,7 @@ import projectsService from "./projectsService";
 
 const initialState = {
   projects: [],
+  comments: [],
   status: "idle",
   error: null,
 };
@@ -27,9 +28,9 @@ export const createProject = createAsyncThunk(
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetched",
-  async (thunkAPI) => {
+  async (query, thunkAPI) => {
     try {
-      return await projectsService.fetchProjects();
+      return await projectsService.fetchProjects(query);
     } catch (error) {
       const response =
         (error.response &&
@@ -76,12 +77,64 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const voteProject = createAsyncThunk(
+  "projects/voted",
+  async (data, thunkAPI) => {
+    try {
+      return await projectsService.vote(data);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
+export const addComment = createAsyncThunk(
+  "projects/comment/added",
+  async (data, thunkAPI) => {
+    try {
+      return await projectsService.addComment(data);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
+export const fetchComments = createAsyncThunk(
+  "projects/comment/fetched",
+  async (slug, thunkAPI) => {
+    try {
+      return await projectsService.fetchProjectComments(slug);
+    } catch (error) {
+      const response =
+        (error.response &&
+          error.response.message &&
+          error.response.message.data) ||
+        error.response ||
+        error.toString();
+      return thunkAPI.rejectWithValue(response);
+    }
+  }
+);
+
 const projectsSlice = createSlice({
   name: "projects",
   initialState,
   reducers: {
     resetProject: (state) => {
       state.projects = [];
+      state.comments = [];
       state.status = "idle";
       state.error = null;
     },
@@ -135,6 +188,38 @@ const projectsSlice = createSlice({
         state.projects = [...filtered];
       })
       .addCase(deleteProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(voteProject.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(voteProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.projects = [...state.projects];
+      })
+      .addCase(voteProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(addComment.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(fetchComments.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.comments = action.payload;
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
